@@ -1,88 +1,40 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-
 import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Upload from "./pages/Upload";
 import Report from "./pages/Report";
 import History from "./pages/History";
 import Settings from "./pages/Settings";
 import AppLayout from "./components/layout/AppLayout";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
-function App() {
+function ProtectedLayout({ children }) {
+  return (
+    <ProtectedRoute>
+      <AppLayout>{children}</AppLayout>
+    </ProtectedRoute>
+  );
+}
+
+export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Landing Page */}
         <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-        {/* Dashboard */}
-        <Route
-          path="/dashboard"
-          element={
-            <AppLayout>
-              <Dashboard />
-            </AppLayout>
-          }
-        />
+        <Route path="/dashboard" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
+        <Route path="/upload" element={<ProtectedLayout><Upload /></ProtectedLayout>} />
+        <Route path="/report" element={<ProtectedLayout><Report /></ProtectedLayout>} />
+        <Route path="/report/:id" element={<ProtectedLayout><Report /></ProtectedLayout>} />
+        <Route path="/history" element={<ProtectedLayout><History /></ProtectedLayout>} />
+        <Route path="/settings" element={<ProtectedLayout><Settings /></ProtectedLayout>} />
 
-        {/* Upload */}
-        <Route
-          path="/upload"
-          element={
-            <AppLayout>
-              <Upload />
-            </AppLayout>
-          }
-        />
-
-        {/* Reports */}
-        <Route
-          path="/report"
-          element={
-            <AppLayout>
-              <Report />
-            </AppLayout>
-          }
-        />
-
-        {/* Individual Report */}
-        <Route
-          path="/report/:id"
-          element={
-            <AppLayout>
-              <Report />
-            </AppLayout>
-          }
-        />
-
-        {/* History */}
-        <Route
-          path="/history"
-          element={
-            <AppLayout>
-              <History />
-            </AppLayout>
-          }
-        />
-
-        {/* Settings */}
-        <Route
-          path="/settings"
-          element={
-            <AppLayout>
-              <Settings />
-            </AppLayout>
-          }
-        />
-
-        {/* Unknown routes → Dashboard */}
-        <Route
-          path="*"
-          element={<Navigate to="/dashboard" replace />}
-        />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
 }
-
-export default App;
