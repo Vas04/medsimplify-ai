@@ -204,7 +204,7 @@ medsimplify-ai/
 └── README.md
 ```
 
-## Future Enhancements
+## Authentication\n\nThe application supports real user registration and login in Real AI Mode. Passwords are stored as secure scrypt hashes and API access uses signed expiring authentication tokens. Reports, test history, viewing, upload, and deletion are scoped to the authenticated user.\n\nFor local Real AI Mode, add `AUTH_SECRET` to `server/.env` using a long random secret. Never commit `.env` files or API keys.\n\n## Future Enhancements
 
 - User authentication
 - Multi-user cloud deployment
