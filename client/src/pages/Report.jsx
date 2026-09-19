@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
   CheckCircle2,
@@ -123,6 +123,7 @@ function getReferenceText(test) {
 
 export default function Report() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
 
   const [report, setReport] = useState(null);
@@ -131,6 +132,8 @@ export default function Report() {
   const [loading, setLoading] = useState(Boolean(id));
   const [error, setError] = useState("");
   const [exporting, setExporting] = useState(false);
+
+  const navigationData = location.state;
 
   const uploadData = useMemo(() => {
     try {
@@ -145,7 +148,11 @@ export default function Report() {
   useEffect(() => {
     const loadReport = async () => {
       if (!id) {
-        if (uploadData) {
+        if (navigationData?.report || navigationData?.analysis) {
+          setReport(navigationData.report || navigationData.analysis);
+          setTests(navigationData.analysis?.tests || []);
+          setSummary(navigationData.analysis?.summary || "");
+        } else if (uploadData) {
           setReport(
             uploadData.report || uploadData
           );
@@ -202,7 +209,7 @@ export default function Report() {
     };
 
     loadReport();
-  }, [id, navigate, uploadData]);
+  }, [id, navigate, navigationData, uploadData]);
 
   const stats = useMemo(() => {
     const within = tests.filter(
