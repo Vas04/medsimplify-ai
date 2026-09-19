@@ -1,7 +1,15 @@
 import axios from "axios";
-import { demoHistoryTests, demoReport, demoReports, demoTestNames } from "../data/demoReport";
+import {
+  demoHistoryTests,
+  demoReport,
+  demoReports,
+  demoTestNames,
+} from "../data/demoReport";
 
-const DEMO_MODE = import.meta.env.VITE_DEMO_MODE !== "false";
+// Demo mode must be explicitly enabled.
+// Real backend mode is the default so uploaded files are actually processed.
+const DEMO_MODE =
+  import.meta.env.VITE_DEMO_MODE === "true";
 
 const http = axios.create({
   baseURL: "http://localhost:5000/api",
@@ -50,7 +58,9 @@ const api = {
       });
     }
 
-    throw new Error(`Demo endpoint not implemented: ${url}`);
+    throw new Error(
+      `Demo endpoint not implemented: ${url}`
+    );
   },
 
   delete: async (url) => {
@@ -63,7 +73,8 @@ const api = {
     return {
       data: {
         success: true,
-        message: "Demo report removed from the current session.",
+        message:
+          "Demo report removed from the current session.",
       },
     };
   },
@@ -80,29 +91,42 @@ const api = {
         data: {
           success: true,
           rejected: false,
-          message: "Demo report analyzed without using an AI API.",
+          message:
+            "Demo report analyzed without using an AI API.",
           report: demoReport.report,
           analysis: {
-            reportType: demoReport.report.report_type,
-            reportDate: demoReport.report.report_date,
+            reportType:
+              demoReport.report.report_type,
+            reportDate:
+              demoReport.report.report_date,
             summary: demoReport.summary,
-            tests: demoReport.tests.map((test) => ({
-              testName: test.test_name,
-              value: test.value,
-              displayValue: test.display_value,
-              unit: test.unit,
-              referenceMin: test.reference_min,
-              referenceMax: test.reference_max,
-              referenceText: test.reference_text,
-              status: test.status,
-              explanation: test.explanation,
-            })),
+            tests: demoReport.tests.map(
+              (test) => ({
+                testName:
+                  test.test_name,
+                value: test.value,
+                displayValue:
+                  test.display_value,
+                unit: test.unit,
+                referenceMin:
+                  test.reference_min,
+                referenceMax:
+                  test.reference_max,
+                referenceText:
+                  test.reference_text,
+                status: test.status,
+                explanation:
+                  test.explanation,
+              })
+            ),
           },
         },
       };
     }
 
-    throw new Error(`Demo endpoint not implemented: ${url}`);
+    throw new Error(
+      `Demo endpoint not implemented: ${url}`
+    );
   },
 };
 
@@ -112,7 +136,10 @@ export const uploadReport = async (file) => {
   const formData = new FormData();
   formData.append("report", file);
 
-  const response = await api.post("/reports/upload", formData);
+  const response = await api.post(
+    "/reports/upload",
+    formData
+  );
 
   return response.data;
 };
