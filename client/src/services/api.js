@@ -15,6 +15,25 @@ const http = axios.create({
   baseURL: "http://localhost:5000/api",
 });
 
+http.interceptors.request.use((config) => {
+  const token = localStorage.getItem("medsimplify_auth_token");
+  if (token && token !== "demo-session") {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+http.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("medsimplify_auth_token");
+      localStorage.removeItem("medsimplify_user");
+    }
+    return Promise.reject(error);
+  }
+);
+
 const demoDelay = (ms = 250) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
