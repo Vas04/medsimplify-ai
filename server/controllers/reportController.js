@@ -137,8 +137,8 @@ const uploadReport = async (req, res) => {
       RETURNING *
       `,
       [
-        1,
-        req.file.originalname,
+          req.user.sub,
+          req.file.originalname,
         analysis.reportType || null,
         analysis.reportDate || null,
         extractedText,
