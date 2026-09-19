@@ -4,176 +4,18 @@
 
 MedSimplify AI is a full-stack web application that uses OCR, artificial intelligence, and a structured database to help users understand medical reports in simple language.
 
-## Problem
+## Quick Start — Demo Mode
 
-Medical reports often contain complex medical terminology, abbreviations, laboratory values, and reference ranges that can be difficult for non-medical users to understand.
+The repository is configured for **Demo Mode by default**.
 
-MedSimplify AI converts uploaded medical reports into structured and easier-to-understand information while keeping the original medical context.
+Demo Mode lets anyone clone the project and explore the main application without:
+- PostgreSQL
+- a Gemini API key
+- consuming Gemini API quota
 
-## Key Features
+The demo uses safe sample medical-report data stored in the frontend. It does **not** send uploaded files to Gemini.
 
-* Upload medical reports in PDF, JPG, and PNG formats
-* Extract text from PDF documents
-* OCR-based text extraction from medical report images
-* AI-powered medical report analysis
-* Extract test names, values, units, reference ranges, and dates
-* Plain-language explanations of test results
-* Historical test-value comparison
-* Interactive report history
-* PostgreSQL database storage
-* Exportable report summaries
-* Responsive web interface
-* Medical safety disclaimer
-* Document validation to reject unrelated files
-
-## Technology Stack
-
-### Frontend
-
-* React
-* Vite
-* Tailwind CSS
-* Axios
-* Recharts
-* Lucide React
-* jsPDF
-
-### Backend
-
-* Node.js
-* Express.js
-* PostgreSQL
-* Multer
-* PDF parsing
-* Tesseract.js OCR
-* Google Gemini AI
-
-## System Architecture
-
-```text
-User
-  │
-  ▼
-React + Vite Frontend
-  │
-  │ HTTP / REST API
-  ▼
-Node.js + Express Backend
-  │
-  ├── PDF Text Extraction
-  ├── Image OCR
-  ├── Medical Report Validation
-  └── Gemini AI Analysis
-  │
-  ▼
-PostgreSQL Database
-  │
-  ├── Users
-  ├── Reports
-  └── Test Results
-  │
-  ▼
-Dashboard / Reports / History
-```
-
-## Application Flow
-
-```text
-Upload Report
-      ↓
-File Validation
-      ↓
-Text Extraction / OCR
-      ↓
-Medical Report Validation
-      ↓
-AI Analysis
-      ↓
-Extract Test Results
-      ↓
-Store in PostgreSQL
-      ↓
-Display Simplified Report
-      ↓
-Compare Historical Results
-      ↓
-Export Summary
-```
-
-## Project Structure
-
-```text
-medsimplify-ai/
-│
-├── client/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   ├── data/
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   └── package.json
-│
-├── server/
-│   ├── config/
-│   ├── controllers/
-│   ├── db/
-│   ├── middleware/
-│   ├── routes/
-│   ├── services/
-│   ├── uploads/
-│   ├── .env.example
-│   ├── server.js
-│   └── package.json
-│
-├── docs/
-├── .gitignore
-├── README.md
-└── package.json
-```
-
-## Database
-
-The application uses PostgreSQL with the following main entities:
-
-### Users
-
-Stores basic user information.
-
-### Reports
-
-Stores uploaded report metadata and extracted text.
-
-### Test Results
-
-Stores structured medical test information such as:
-
-* Test name
-* Value
-* Unit
-* Reference range
-* Status
-* Plain-language explanation
-
-Reports and their test results are connected using relational database relationships.
-
-## Medical Safety
-
-MedSimplify AI is designed for **informational purposes only**.
-
-The system does not:
-
-* Diagnose diseases
-* Prescribe medication
-* Recommend treatments
-* Replace a qualified healthcare professional
-
-Users should consult a qualified medical professional for medical interpretation and decisions.
-
-## Running the Project Locally
-
-### 1. Clone the repository
+### 1. Clone
 
 ```bash
 git clone https://github.com/Vas04/medsimplify-ai.git
@@ -187,14 +29,45 @@ cd client
 npm install
 ```
 
-### 3. Install backend dependencies
+### 3. Start Demo Mode
 
 ```bash
-cd ../server
-npm install
+npm run dev
 ```
 
-### 4. Configure environment variables
+Open the Vite URL shown in the terminal.
+
+You can explore:
+
+- Dashboard
+- Upload Report
+- Demo AI report
+- Report history
+- Historical comparison
+- PDF export
+- Settings
+
+**No PostgreSQL or Gemini key is required for Demo Mode.**
+
+## Real AI Mode
+
+To process real medical reports, switch Demo Mode off.
+
+Create:
+
+```text
+client/.env
+```
+
+with:
+
+```env
+VITE_DEMO_MODE=false
+```
+
+Then configure the backend.
+
+### Backend setup
 
 Create:
 
@@ -210,79 +83,136 @@ DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@localhost:5432/medsimplify
 GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 ```
 
-Never commit `.env` to GitHub.
+Never commit `.env` or API keys to GitHub.
 
-### 5. Start PostgreSQL
-
-Create the database:
+Create the PostgreSQL database:
 
 ```text
 medsimplify
 ```
 
-Then execute the database schema from:
+Run:
 
 ```text
 server/db/schema.sql
+server/db/seed.sql
 ```
 
-### 6. Start the backend
+Install and start the backend:
 
 ```bash
 cd server
+npm install
 node server.js
 ```
 
-Backend:
-
-```text
-http://localhost:5000
-```
-
-### 7. Start the frontend
-
-Open another terminal:
+Then start the frontend in another terminal:
 
 ```bash
 cd client
 npm run dev
 ```
 
-The frontend will be available at the Vite development URL shown in the terminal.
+## Features
 
-## Main Pages
+- PDF, JPG and PNG medical report upload
+- PDF text extraction
+- OCR for report images
+- AI-powered report simplification
+- Test/value/unit/reference-range extraction
+- Plain-language explanations
+- Historical test comparison
+- PostgreSQL storage
+- PDF export
+- Responsive interface
+- Medical report validation
+- Medical safety disclaimer
 
-* Landing Page
-* Dashboard
-* Upload Report
-* Report Details
-* Report History
-* Settings
+## Technology Stack
+
+### Frontend
+- React
+- Vite
+- Tailwind CSS
+- Axios
+- Recharts
+- Lucide React
+- jsPDF
+
+### Backend
+- Node.js
+- Express.js
+- PostgreSQL
+- Multer
+- PDF parsing
+- Tesseract.js OCR
+- Google Gemini AI
+
+## Architecture
+
+```text
+User
+  |
+  v
+React + Vite
+  |
+  +---- Demo Mode ----> Local sample data
+  |
+  +---- Real AI Mode --> Express API
+                              |
+                    +---------+---------+
+                    |                   |
+                 OCR/PDF            Gemini AI
+                    |
+                    v
+                PostgreSQL
+                    |
+                    v
+          Reports / History / Export
+```
+
+## Medical Safety
+
+MedSimplify AI provides informational explanations only.
+
+It does not:
+- diagnose diseases
+- prescribe medication
+- recommend treatment
+- replace a healthcare professional
+
+Reference ranges can vary between laboratories. Users should consult a qualified healthcare professional for medical decisions.
+
+## Project Structure
+
+```text
+medsimplify-ai/
+├── client/
+│   ├── src/
+│   ├── .env.example
+│   └── package.json
+├── server/
+│   ├── controllers/
+│   ├── db/
+│   ├── middleware/
+│   ├── routes/
+│   ├── services/
+│   ├── .env.example
+│   └── package.json
+├── docs/
+├── .gitignore
+└── README.md
+```
 
 ## Future Enhancements
 
-Possible future improvements include:
-
-* User authentication
-* Multi-user report management
-* More regional languages
-* Advanced historical trend analysis
-* Mobile application
-* Improved OCR for handwritten reports
-* Cloud deployment
-* Role-based access for healthcare organizations
-
-## Project Purpose
-
-This project demonstrates the integration of:
-
-* Artificial Intelligence
-* Optical Character Recognition
-* Full-stack web development
-* REST APIs
-* Relational database management
-* Data visualization
-* Human-centered software design
+- User authentication
+- Multi-user cloud deployment
+- Additional regional languages
+- Advanced trend analysis
+- Mobile application
+- Improved handwritten-report OCR
+- Healthcare organization roles
 
 ---
 
