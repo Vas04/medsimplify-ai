@@ -1,4 +1,5 @@
 import { ArrowRight, FileText, Sparkles, TrendingUp } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function Landing() {
   return (
